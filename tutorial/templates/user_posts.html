@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h1 class="mb-3">Posts by {{ user.username }} ({{ posts.total }})</h1>
+    {% if posts.items[0].author == current_user %}
+      <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete All posts</button>
+    {% endif %}  
+    {% for post in posts.items %}
+      <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+        <div class="media-body">
+          <div class="article-metadata">
+            <a class="mr-2" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
+            <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+          </div>
+          <h2><a class="article-title" href="{{ url_for('posts_1.post', post_id=post.id) }}">{{ post.title }}</a></h2>
+          <p class="article-content">{{ post.content }}</p>
+        </div>
+      </article>
+
+    {% endfor %}
+
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if posts.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('users.user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('users.user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
+
+        {% endif %}
+
+      {% else %}
+        ...
+      {% endif %}
+
+    {% endfor %}
+
+  <!-- Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Posts?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            Are you sure you want to Delete all your posts?
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <form action="{{ url_for('posts_1.delete_all_posts') }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+        </form>
+        </div>
+    </div>
+    </div>
+  </div>  
+
+{% endblock content %}
