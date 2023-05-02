@@ -7,5 +7,5 @@ This is a blog website which allows the users to make an account. The account in
 3. Inside the directory, type `python3 -m venv venv.`
 
 4. Then type `source venv/bin/activate` for Mac or `venv\Scripts\activate.bat` for Windows.
-5. Then type `pip install -r requirements.txt` to install all the required libraries to run this website (To be updated)
+5. Then type `pip install -r requirements.txt` to install all the required libraries to run this website.
 6. Finally type `python3 run.py` to run the server and copy http://localhost:5000 into a web browser to run the website.  
